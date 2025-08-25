@@ -34,26 +34,83 @@
 </head>
 <body>
 
-<!-- بخش معرفی دوستان -->
-<section id="referral" class="fade" style="background:#fff1e3;margin:40px 0;padding:40px 20px;border-radius:20px;">
-  <div class="container" style="text-align:center">
-    <h2 style="color:var(--accent);font-size:2rem;margin-bottom:15px">
-      🎁 دوست‌یابی رایگان!
-    </h2>
-    <p style="font-size:1.2rem;line-height:2;color:var(--text)">
-      دوستان خود را با <strong>کد معرف «درخشان»</strong> به ما معرفی کن و <strong>مبل رایگان</strong> بگیر:<br>
-      <span style="background:#ffe0b2;padding:4px 8px;border-radius:8px;font-weight:700">
-        کد معرف: <span style="color:#ff6f00">DERAKHSHAN</span>
-      </span>
-    </p>
-    <ul style="text-align:right;max-width:380px;margin:20px auto;font-size:1rem">
-      <li>هر نفر معرفی‌شده = یک <strong>نفره مبل رایگان</strong> برای شما</li>
-      <li>معرفی ۸ نفر = یک دست مبل <strong>۸ نفره کاملاً رایگان</strong></li>
-      <li>بدون محدودیت تعداد معرفی‌ها</li>
-    </ul>
-    <a href="#contact" class="cta-button" style="margin-top:20px">همین حالا شروع کن</a>
-  </div>
+<!-- 🎁 بنر جذاب «شستشوی رایگان» -->
+<section style="background:linear-gradient(135deg,#ffe259,#ffa751);margin:50px 0;padding:40px 20px;border-radius:20px;text-align:center">
+  <h2 style="color:#fff;text-shadow:1px 1px 2px #000;font-size:2rem;margin-bottom:15px">
+    🎁 شستشوی مبل رایگان بگیر!
+  </h2>
+  <p style="font-size:1.3rem;color:#004d40;margin-bottom:25px;line-height:1.8">
+    ثبت‌نام کن و یک <strong>کد معرف اختصاصی</strong> بگیر.<br>
+    هر کسی با آن کد به ما مراجعه کند، به ازای هر نفر <strong>یک نفره مبل برای شما رایگان</strong> می‌شود.<br>
+    معرفی ۸ نفر = <strong>یک دست مبل ۸ نفره کاملاً رایگان!</strong>
+  </p>
+  <button class="cta-button" onclick="openReferralPopup()" style="font-size:1.3rem;padding:18px 40px">
+    ثبت‌نام سریع
+  </button>
 </section>
+
+<!-- ۱) پاپ‌آپ ثبت‌نام -->
+<div id="referralPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:25px;border-radius:15px;width:90%;max-width:400px;font-family:'IRANSans',Tahoma,sans-serif">
+    <span style="float:left;cursor:pointer;font-size:1.5rem" onclick="closeReferralPopup()">&times;</span>
+    <h3 style="text-align:center;margin-bottom:15px;color:#00bfa5">ثبت‌نام کد معرف</h3>
+
+    <label>نام</label>
+    <input type="text" id="fname" required style="width:100%;padding:8px;margin-bottom:10px;border:1px solid #ccc;border-radius:8px">
+
+    <label>فامیلی</label>
+    <input type="text" id="lname" required style="width:100%;padding:8px;margin-bottom:10px;border:1px solid #ccc;border-radius:8px">
+
+    <label>موبایل</label>
+    <input type="tel" id="phone" pattern="09[0-9]{9}" maxlength="11" required style="width:100%;padding:8px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px">
+
+    <!-- انتخاب پیام‌رسان -->
+    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:15px">
+      <button type="button" class="cta-button" style="flex:1;font-size:.9rem" onclick="sendVia('wa')">واتساپ</button>
+      <button type="button" class="cta-button" style="flex:1;font-size:.9rem" onclick="sendVia('tg')">تلگرام</button>
+      <button type="button" class="cta-button" style="flex:1;font-size:.9rem" onclick="sendVia('rub')">روبیکا</button>
+    </div>
+
+    <div id="refCodeDisplay" style="display:none;margin-top:15px;text-align:center;font-size:1.2rem;font-weight:700;color:var(--accent)"></div>
+  </div>
+</div>
+
+<!-- ۲) اسکریپت‌ها -->
+<script>
+const faToEn = {'ا':'A','ب':'B','پ':'P','ت':'T','ث':'S','ج':'J','چ':'Ch','ح':'H','خ':'Kh','د':'D','ذ':'Z','ر':'R','ز':'Z','ژ':'Zh','س':'S','ش':'Sh','ص':'S','ض':'Z','ط':'T','ظ':'Z','ع':'A','غ':'Gh','ف':'F','ق':'Q','ک':'K','گ':'G','ل':'L','م':'M','ن':'N','و':'V','ه':'H','ی':'Y'};
+
+function openReferralPopup() { document.getElementById('referralPopup').style.display='block'; }
+function closeReferralPopup() { document.getElementById('referralPopup').style.display='none'; }
+
+function toLatin(ch) { return faToEn[ch] || ch.toUpperCase(); }
+
+function sendVia(app) {
+  const fname = document.getElementById('fname').value.trim();
+  const lname = document.getElementById('lname').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  if (!fname || !lname || phone.length < 11) { alert('لطفاً همه فیلدها را پر کنید'); return; }
+
+  const firstLatin = toLatin(fname.charAt(0));
+  const last4 = phone.slice(-4);
+  const day = new Date().getDate();
+  const code = `DERAKHSHAN${firstLatin}${last4}${day}`;
+  let text = `ثبت‌نام جدید\nنام: ${fname}\nفامیلی: ${lname}\nموبایل: ${phone}\nکد معرف: ${code}`;
+  let url = '';
+
+  switch (app) {
+    case 'wa':
+      url = `https://wa.me/989148178410?text=${encodeURIComponent(text)}`;
+      break;
+    case 'tg':
+      url = `https://t.me/rezaazad8410?text=${encodeURIComponent(text)}`;
+      break;
+    case 'rub':
+      url = `https://rubika.ir/rezaazad8410?text=${encodeURIComponent(text)}`;
+      break;
+  }
+  window.open(url, '_blank');
+}
+</script>
 
 <header class="fade">
   <div class="container header-content">
