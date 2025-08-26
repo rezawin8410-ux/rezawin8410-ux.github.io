@@ -371,8 +371,7 @@ function copyMessage(app) {
 
 <script>
 const rssUrl = 'https://derakhshan.blogix.ir/rss';
-const proxy  = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl);
-
+const proxy  = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl) + '&_=' + Date.now();
 fetch(proxy)
   .then(r => r.json())
   .then(data => {
