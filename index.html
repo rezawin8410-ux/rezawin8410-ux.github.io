@@ -34,6 +34,20 @@
 </head>
 <body>
 
+<head>
+  <meta charset="UTF-8" />
+  <title>درخشان – شستشوی مبل رایگان</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- فونت و استایل‌های ساده -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+  <style>
+    body{font-family:Vazir,Tahoma,sans-serif;margin:0;background:#f9f9f9;color:#333}
+    .cta-button{background:#00bfa5;color:#fff;border:none;border-radius:8px;cursor:pointer}
+  </style>
+</head>
+
+<body>
+
 <!-- 🎁 بنر جذاب «شستشوی رایگان» -->
 <section style="background:linear-gradient(135deg,#ffe259,#ffa751);margin:50px 0;padding:40px 20px;border-radius:20px;text-align:center">
   <h2 style="color:#fff;text-shadow:1px 1px 2px #000;font-size:2rem;margin-bottom:15px">
@@ -51,7 +65,7 @@
 
 <!-- ۱) پاپ‌آپ ثبت‌نام -->
 <div id="referralPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999">
-  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:25px;border-radius:15px;width:90%;max-width:400px;font-family:'IRANSans',Tahoma,sans-serif">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:25px;border-radius:15px;width:90%;max-width:400px;font-family:Vazir,Tahoma,sans-serif">
     <span style="float:left;cursor:pointer;font-size:1.5rem" onclick="closeReferralPopup()">&times;</span>
     <h3 style="text-align:center;margin-bottom:15px;color:#00bfa5">ثبت‌نام کد معرف</h3>
 
@@ -64,27 +78,37 @@
     <label>موبایل</label>
     <input type="tel" id="phone" pattern="09[0-9]{9}" maxlength="11" required style="width:100%;padding:8px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px">
 
+    <button onclick="generateCode()" class="cta-button" style="width:100%;padding:10px;font-size:1rem">ساخت کد معرف</button>
+
+    <!-- نمایش کد معرف -->
+    <div id="refCodeDisplay" style="display:none;margin:15px 0;text-align:center;font-size:1.2rem;font-weight:700;color:#00bfa5"></div>
+
     <!-- انتخاب پیام‌رسان -->
-    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:15px">
-      <button type="button" class="cta-button" style="flex:1;font-size:.9rem" onclick="sendVia('wa')">واتساپ</button>
-      <button type="button" class="cta-button" style="flex:1;font-size:.9rem" onclick="sendVia('tg')">تلگرام</button>
-      <button type="button" class="cta-button" style="flex:1;font-size:.9rem" onclick="sendVia('rub')">روبیکا</button>
+    <div id="shareButtons" style="display:none;flex-direction:column;gap:10px;margin-top:15px">
+      <button onclick="copyMessage('wa')" class="cta-button" style="padding:10px;background:#25D366">کپی پیام برای واتساپ</button>
+      <button onclick="copyMessage('tg')" class="cta-button" style="padding:10px;background:#0088cc">کپی پیام برای تلگرام</button>
+      <button onclick="copyMessage('rub')" class="cta-button" style="padding:10px;background:#d32f2f">کپی پیام برای روبیکا</button>
     </div>
 
-    <div id="refCodeDisplay" style="display:none;margin-top:15px;text-align:center;font-size:1.2rem;font-weight:700;color:var(--accent)"></div>
+    <p id="copyMessage" style="display:none;margin-top:10px;color:green;text-align:center">پیام کپی شد، حالا در پیام‌رسانت بچسبون و بفرست!</p>
   </div>
 </div>
 
-<!-- ۲) اسکریپت‌ها -->
+<!-- برای دیالوگ زیبا -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-const faToEn = {'ا':'A','ب':'B','پ':'P','ت':'T','ث':'S','ج':'J','چ':'Ch','ح':'H','خ':'Kh','د':'D','ذ':'Z','ر':'R','ز':'Z','ژ':'Zh','س':'S','ش':'Sh','ص':'S','ض':'Z','ط':'T','ظ':'Z','ع':'A','غ':'Gh','ف':'F','ق':'Q','ک':'K','گ':'G','ل':'L','م':'M','ن':'N','و':'V','ه':'H','ی':'Y'};
+const faToEn = { 'ا':'A','ب':'B','پ':'P','ت':'T','ث':'S','ج':'J','چ':'Ch','ح':'H','خ':'Kh','د':'D','ذ':'Z','ر':'R','ز':'Z','ژ':'Zh','س':'S','ش':'Sh','ص':'S','ض':'Z','ط':'T','ظ':'Z','ع':'A','غ':'Gh','ف':'F','ق':'Q','ک':'K','گ':'G','ل':'L','م':'M','ن':'N','و':'V','ه':'H','ی':'Y' };
 
 function openReferralPopup() { document.getElementById('referralPopup').style.display='block'; }
 function closeReferralPopup() { document.getElementById('referralPopup').style.display='none'; }
 
 function toLatin(ch) { return faToEn[ch] || ch.toUpperCase(); }
 
-function sendVia(app) {
+let finalCode = '';
+let finalMessage = '';
+
+function generateCode() {
   const fname = document.getElementById('fname').value.trim();
   const lname = document.getElementById('lname').value.trim();
   const phone = document.getElementById('phone').value.trim();
@@ -93,22 +117,60 @@ function sendVia(app) {
   const firstLatin = toLatin(fname.charAt(0));
   const last4 = phone.slice(-4);
   const day = new Date().getDate();
-  const code = `DERAKHSHAN${firstLatin}${last4}${day}`;
-  let text = `ثبت‌نام جدید\nنام: ${fname}\nفامیلی: ${lname}\nموبایل: ${phone}\nکد معرف: ${code}`;
-  let url = '';
+  finalCode = `DERAKHSHAN${firstLatin}${last4}${day}`;
 
+  document.getElementById('refCodeDisplay').textContent = `کد معرف شما: ${finalCode}`;
+  document.getElementById('refCodeDisplay').style.display = 'block';
+
+  finalMessage = `سلام! من توی سرویس درخشان ثبت‌نام کردم و یه کد معرف دارم.
+
+برای اینکه بتونم از شستشوی رایگان استفاده کنم، لطفاً بعد از تماس با خدمات مبل‌شویی درخشان، حتماً کد معرف من رو بهشون بده تا ثبت بشه.
+
+کد معرف من: ${finalCode}
+
+برای ثبت‌نام و دیدن جزئیات کامل، روی لینک زیر کلیک کنید:
+${location.href}
+
+برای شستشوی مبلمان حرفه‌ای با قیمت عالی، حتماً امتحان کنید:
+📞 09148178410`;
+
+  document.getElementById('shareButtons').style.display = 'flex';
+}
+
+function copyMessage(app) {
+  navigator.clipboard.writeText(finalMessage).then(() => {
+    const appName = app==='wa' ? 'واتساپ' : app==='tg' ? 'تلگرام' : 'روبیکا';
+    Swal.fire({
+      title: '✅ پیام کپی شد!',
+      html: `
+        <div style="text-align:right;font-size:1rem;line-height:1.8">
+          <p>حالا کافیه:</p>
+          <ol>
+            <li>روی دکمه زیر کلیک کن تا ${appName} باز بشه</li>
+            <li>روی <strong>فیلد چت</strong> بزن و <strong>نگه دار</strong></li>
+            <li>روی <strong>چسباندن (Paste)</strong> بزن</li>
+            <li>و بعد پیام رو بفرست!</li>
+          </ol>
+          <a href="${buildAppLink(app)}" target="_blank" style="display:inline-block;margin-top:10px;padding:10px 20px;background:#00bfa5;color:#fff;border-radius:10px;text-decoration:none">
+            باز کردن ${appName}
+          </a>
+        </div>`,
+      icon: 'success',
+      confirmButtonText: 'متوجه شدم!',
+      confirmButtonColor: '#00bfa5',
+      width: 360
+    });
+  });
+}
+
+function buildAppLink(app) {
+  const encoded = encodeURIComponent(finalMessage);
   switch (app) {
-    case 'wa':
-      url = `https://wa.me/989148178410?text=${encodeURIComponent(text)}`;
-      break;
-    case 'tg':
-      url = `https://t.me/rezaazad8410?text=${encodeURIComponent(text)}`;
-      break;
-    case 'rub':
-      url = `https://rubika.ir/rezaazad8410?text=${encodeURIComponent(text)}`;
-      break;
+    case 'wa': return `https://wa.me/?text=${encoded}`;
+    case 'tg': return `https://t.me/share/url?url=&text=${encoded}`;
+    case 'rub': return `https://rubika.ir/share?text=${encoded}`;
+    default: return '#';
   }
-  window.open(url, '_blank');
 }
 </script>
 
