@@ -369,28 +369,29 @@ function copyMessage(app) {
   <div id="blogFeed" style="max-width:600px;margin:0 auto;direction:rtl"></div>
 </section>
 
-<!-- فقط کد RSS-خوان -->
-<div id="feed" style="max-width:600px;margin:1rem auto;direction:rtl"></div>
-<script>
-const feedUrl="https://derakhshan.blogix.ir/rss";        // آدرس RSS را عوض کنید
-fetch(feedUrl)
-  .then(r=>r.text())
-  .then(str=>new DOMParser().parseFromString(str,"text/xml"))
-  .then(d=>{
-    const box=document.getElementById('feed');
-    [...d.querySelectorAll('item')].slice(0,5).forEach(i=>{
-      const t=i.querySelector('title').textContent;
-      const l=i.querySelector('link').textContent;
-      const c=i.querySelector('description').textContent.replace(/<[^>]*>?/gm,'').slice(0,120)+"…";
-      box.insertAdjacentHTML('beforeend',`
-        <div style="background:#fff;border:1px solid #ddd;border-radius:8px;padding:10px;margin-bottom:10px">
-          <strong style="color:#ff6f00">${t}</strong><br>${c}<br>
-          <a href="${l}" target="_blank" style="color:#00bfa5;font-size:.8rem">ادامه</a>
-        </div>`);
-    });
-  })
-  .catch(()=>{document.getElementById('feed').innerHTML='<p style="text-align:center;color:#777">خطا در دریافت</p>';});
-</script>
+<rss xmlns:dc="https://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
+<channel>
+<title>مبل شویی درخشان</title>
+<link>https://derakhshan.blogix.ir</link>
+<atom:link href="https://derakhshan.blogix.ir/rss" rel="self" type="application/rss+xml"/>
+<description/>
+<language>fa</language>
+<generator>https://blogix.ir</generator>
+<lastBuildDate>Wed, 27 Aug 2025 01:48:23 +0330</lastBuildDate>
+<item>
+<title>ثغابیابابی</title>
+<link>https://derakhshan.blogix.ir/post/1</link>
+<description>
+<![CDATA[ <p>صقعبنالنتغفص5شثسغیبازت5ض6ثسغقیبز</p> ]]>
+</description>
+<pubDate>Wed, 27 Aug 2025 01:48:23 +0330</pubDate>
+<comments>https://derakhshan.blogix.ir/post/1/comment</comments>
+<dc:creator>derakhshan</dc:creator>
+<guid>https://derakhshan.blogix.ir/post/1</guid>
+<slash:comments>0</slash:comments>
+</item>
+</channel>
+</rss>
     
 <footer class="fade">
   <div class="container">
