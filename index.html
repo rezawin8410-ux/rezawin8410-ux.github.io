@@ -363,35 +363,69 @@ function copyMessage(app) {
   </div>
 </section>
 
-<!-- 🔴 کادر زندهٔ آخرین پست‌های بلاگ -->
+<!-- 🔴 کادر زندهٔ آخرین پست‌ها (بدون لینک، با ری‌اکشن رندوم) -->
 <section style="margin:60px 0 40px">
   <h2 style="text-align:center;margin-bottom:15px;color:#ff6f00">📢 آخرین اخبار و تخفیف‌ها</h2>
   <div id="blogFeed" style="max-width:600px;margin:0 auto;direction:rtl"></div>
 </section>
 
-<rss xmlns:dc="https://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
-<channel>
-<title>مبل شویی درخشان</title>
-<link>https://derakhshan.blogix.ir</link>
-<atom:link href="https://derakhshan.blogix.ir/rss" rel="self" type="application/rss+xml"/>
-<description/>
-<language>fa</language>
-<generator>https://blogix.ir</generator>
-<lastBuildDate>Wed, 27 Aug 2025 01:48:23 +0330</lastBuildDate>
-<item>
-<title>ثغابیابابی</title>
-<link>https://derakhshan.blogix.ir/post/1</link>
-<description>
-<![CDATA[ <p>صقعبنالنتغفص5شثسغیبازت5ض6ثسغقیبز</p> ]]>
-</description>
-<pubDate>Wed, 27 Aug 2025 01:48:23 +0330</pubDate>
-<comments>https://derakhshan.blogix.ir/post/1/comment</comments>
-<dc:creator>derakhshan</dc:creator>
-<guid>https://derakhshan.blogix.ir/post/1</guid>
-<slash:comments>0</slash:comments>
-</item>
-</channel>
-</rss>
+<script>
+const rssUrl = 'https://derakhshan.blogix.ir/rss';
+const proxy  = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl);
+
+fetch(proxy)
+  .then(r => r.json())
+  .then(data => {
+    const box = document.getElementById('blogFeed');
+    data.items.slice(0,5).forEach(item=>{
+      const title = item.title;
+      const desc  = item.description.replace(/<[^>]*>?/gm,'').slice(0,150)+'…';
+      const date  = new Date(item.pubDate).toLocaleDateString('fa-IR',{year:'numeric',month:'long',day:'numeric'});
+      const card = document.createElement('div');
+      card.className='postCard';
+      card.innerHTML = `
+        <div class="postTitle">${title}</div>
+        <div class="postDesc">${desc}</div>
+        <div class="postDate">${date}</div>
+      `;
+      box.appendChild(card);
+    });
+  })
+  .catch(()=>{
+    document.getElementById('blogFeed').innerHTML='<p style="text-align:center;color:#777">در حال حاضر امکان دریافت مطالب وجود ندارد.</p>';
+  });
+</script>
+
+<style>
+@keyframes slideIn{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.postCard{
+  cursor:pointer;
+  background:#fff;
+  border-left:4px solid var(--accent);
+  border-radius:15px;
+  padding:18px 20px;
+  margin-bottom:15px;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+  font-size:.95rem;
+  line-height:1.8;
+  transition:transform .3s, box-shadow .3s, background .3s;
+  animation:slideIn .6s ease forwards;
+}
+.postCard:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+.postCard:active{
+  transform:scale(.98);
+  background:var(--bg);               /* رنگ پس‌زمینه‌ی متغیر */
+}
+.postTitle{ font-weight:700; color:var(--accent); margin-bottom:6px }
+.postDesc{ color:var(--text); margin-bottom:8px }
+.postDate{ font-size:.75rem; color:#777 }
+</style>
     
 <footer class="fade">
   <div class="container">
