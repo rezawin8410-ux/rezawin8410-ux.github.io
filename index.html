@@ -449,6 +449,62 @@ function showSlide(n){
 setInterval(()=>showSlide(currentSlide+1),4000);
 showSlide(0);
 </script>
-    
+
+<!-- برچسب تماس با مدیران کنار آیکون -->
+<span id="callLabel">تماس با مدیران</span>
+
+<!-- آیکون چت متحرک -->
+<div id="chatWidget">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2z"/></svg>
+</div>
+
+<!-- پنجرهٔ چت -->
+<div id="chatBox" style="display:none;position:fixed;bottom:90px;right:20px;width:320px;height:400px;background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:10000;overflow:hidden">
+  <iframe src="https://blogix.ir/gofteman/chat/d1e2r3a4k5h6s7h8 " style="width:100%;height:100%;border:none"></iframe>
+</div>
+
+<style>
+#callLabel{
+  position:fixed;
+  bottom:28px;          /* راست‌چین کنار آیکون */
+  right:85px;
+  background:#fff;
+  color:#ff6f00;
+  font-size:.8rem;
+  font-weight:700;
+  padding:4px 8px;
+  border-radius:8px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  z-index:9998;
+  white-space:nowrap;
+}
+#chatWidget{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:56px;
+  height:56px;
+  background:#ff6f00;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:9999;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+  animation:pulse 2s infinite;
+}
+#chatWidget svg{width:26px;height:26px;fill:#fff}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+</style>
+
+<script>
+const btn = document.getElementById('chatWidget');
+const box = document.getElementById('chatBox');
+btn.addEventListener('click', () => {
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+});
+</script>
+
 </body>
 </html>
