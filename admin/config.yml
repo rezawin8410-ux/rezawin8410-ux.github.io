@@ -22,7 +22,7 @@ collections:
           - {label: "عنوان صفحه اول", name: "heroTitle", widget: "string", default: "مبل، تشک، فرش → مثل روز اولش کن!"}
           - {label: "شماره تماس اول", name: "tel1", widget: "string", default: "09148178410"}
           - {label: "شماره تماس دوم", name: "tel2", widget: "string", default: "09104415400"}
-          - {label: "متن بنر تخفیف", name: "bannerText", widget: "text", default: "🎁 امتیاز شستشوی مبل رایگان بگیر!"}
+          - {label: "متن بنر تخفیف", name: "bannerText", widget: "text", default: "[هدیه] امتیاز شستشوی مبل رایگان بگیر!"}
 
   - name: "prices"
     label: "جدول قیمت‌ها"
