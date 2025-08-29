@@ -1,0 +1,41 @@
+
+backend:
+  name: github
+  repo: rezawin8410-ux/msderakhshan.github.io   # ← نام‌کاربری‌ات را اینجا بزن
+  branch: main
+  site_domain: msderakhshan.github.io          # ← و اینجا هم
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "settings"
+    label: "تنظیمات سایت"
+    files:
+      - name: "general"
+        label: "اطلاعات اصلی"
+        file: "_data/settings.json"
+        fields:
+          - {label: "عنوان صفحه اول", name: "heroTitle", widget: "string", default: "مبل، تشک، فرش → مثل روز اولش کن!"}
+          - {label: "شماره تماس اول", name: "tel1", widget: "string", default: "09148178410"}
+          - {label: "شماره تماس دوم", name: "tel2", widget: "string", default: "09104415400"}
+          - {label: "متن بنر تخفیف", name: "bannerText", widget: "text", default: "🎁 امتیاز شستشوی مبل رایگان بگیر!"}
+
+  - name: "prices"
+    label: "جدول قیمت‌ها"
+    folder: "_data/prices"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "نام آیتم", name: "title", widget: "string"}
+      - {label: "قیمت واقعی (تومان)", name: "original", widget: "number"}
+      - {label: "قیمت با تخفیف (تومان)", name: "final", widget: "number"}
+
+  - name: "gallery"
+    label: "تصاویر گالری"
+    folder: "_data/gallery"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "عنوان عکس", name: "title", widget: "string"}
+      - {label: "آپلود عکس", name: "image", widget: "image"}
